@@ -4,7 +4,7 @@ module Diceware
 
   class Generator
     def initialize(file, number)
-      @file = file.strip
+      @file = file
       @number = number
       @words = IO.read(@file)
     end
@@ -38,7 +38,7 @@ module Diceware
 
   def self.file_name
     print "Enter a file name (txt format): "
-    @file = gets.chomp
+    @file = gets.chomp.strip
     
     if @number
       generate
@@ -49,7 +49,7 @@ module Diceware
 
   def self.number
     print "Enter the number of words your password should contain: "
-    @number = gets.chomp
+    @number = gets.chomp.strip
 
     if check_for_number(@number)
       generate
@@ -74,8 +74,8 @@ module Diceware
       password = password.sanitize_words.to_array.select!
       puts "Your password is: #{password}"
       print "Do you want to copy your password to the clipboard? (Y|n) "
-      input = gets.chomp
-      if input == "Y"
+      input = gets.chomp.strip
+      if input == "Y" || input == "y"
         pbcopy(password)
       end
       print "Thanks for using the Custom Diceware Password Generator"
