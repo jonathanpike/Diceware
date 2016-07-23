@@ -2,7 +2,7 @@
 
 A while ago, I read about Dr. Drang's [shell commands that generate diceware-like passwords from text files](http://leancrew.com/all-this/2015/04/passphrases-via-shell-pipeline/).  This is a great idea, but I wanted to do it in Ruby.  
 
-## Useage: 
+## Usage 
 
 ![Demo Gif](https://github.com/jonathanpike/Diceware/blob/master/demo.gif)
 
