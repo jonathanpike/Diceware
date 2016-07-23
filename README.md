@@ -4,6 +4,8 @@ A while ago, I read about Dr. Drang's [shell commands that generate diceware-lik
 
 ## Useage: 
 
+![Demo Gif](https://github.com/jonathanpike/Diceware/blob/master/demo.gif)
+
 1. Download `diceware.rb`.  You can remove the `.rb` file extension, and then symlink the file to your /usr/local/bin/ directory like so: ln -s $PWD/diceware /usr/local/bin/
 
 2. Next, you'll need to get a plain text file with a number of unique words.  I suggest anything from [Project Gutenberg](https://www.gutenberg.org), although I'm partial too [Pride and Prejudice](https://www.gutenberg.org/ebooks/42671).
