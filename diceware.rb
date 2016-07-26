@@ -3,10 +3,14 @@
 module Diceware 
 
   class Generator
+    attr_reader :array 
+
     def initialize(file, number)
       @file = file
       @number = number
       @words = IO.read(@file)
+      @array = @words.downcase!.gsub!(/\n/," ").gsub!(/[^a-z]/, ' ')
+               .split(' ').reject! { |w| w.length < 4 }.uniq!
     end
 
     def generate_random_index
@@ -14,18 +18,7 @@ module Diceware
       prng.rand(@array.count)
     end
 
-    def sanitize_words
-      @words.downcase!.gsub!(/\n/," ").gsub!(/[^a-z]/, ' ')
-      self  
-    end
-
-    def to_array
-      @array = @words.split(' ').reject! { |w| w.length < 4 }.uniq!
-      puts "Your password will be generated from a list of #{@array.count} unique words."
-      self 
-    end
-
-    def select!
+    def generate!
       password = []
       @number.times do |num| 
         index = generate_random_index
@@ -67,11 +60,12 @@ module Diceware
   def self.generate
     begin 
       password = Generator.new(@file, @number.to_i)
-    rescue Errno::ENOENT => ex
+      puts "Your password will be generated from a list of #{password.array.count} unique words."
+    rescue Errno::ENOENT
       puts "That file doesn't exist. Try again."
       file_name
     else
-      password = password.sanitize_words.to_array.select!
+      password = password.generate!
       puts "Your password is: #{password}"
       print "Do you want to copy your password to the clipboard? (Y|n) "
       input = gets.chomp.strip
@@ -91,7 +85,7 @@ module Diceware
   begin 
     puts "Welcome to the Custom Diceware Password Generator"
     file_name
-  rescue Interrupt => e
+  rescue Interrupt
     puts 
     print "Thanks for using the Custom Diceware Password Generator"
   end 
