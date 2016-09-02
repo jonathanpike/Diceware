@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require_relative 'generator'
+require_relative 'diceware/generator'
 require 'optparse'
 
 class Diceware
