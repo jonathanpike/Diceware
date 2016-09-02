@@ -1,78 +1,59 @@
 #!/usr/bin/env ruby
 
-module Diceware 
+require_relative 'generator'
+require 'optparse'
 
-  class Generator
-    attr_reader :array 
+class Diceware
 
-    def initialize(file, number)
-      @file = file
-      @number = number
-      @words = IO.read(@file)
-      @array = @words.downcase!.gsub!(/\n/," ").gsub!(/[^a-z]/, ' ')
-               .split(' ').reject! { |w| w.length < 4 }.uniq!
-    end
+  VERSION = '0.2.0'
 
-    def generate_random_index
-      prng = Random.new
-      prng.rand(@array.count)
-    end
-
-    def generate!
-      password = []
-      @number.times do |num| 
-        index = generate_random_index
-        password << @array[index]
-      end 
-      password.join(" ")
-    end
-  end
-
-
-  def self.file_name
-    print "Enter a file name (txt format): "
-    @file = gets.chomp.strip
-    
-    if @number
-      generate
-    else 
-      number
-    end 
-  end
-
-  def self.number
-    print "Enter the number of words your password should contain: "
-    @number = gets.chomp.strip
-
-    if check_for_number(@number)
-      generate
-    else 
-      puts "That's not a number.  Try again."
-      number
-    end 
+  def self.parse(args)
+    @options = {}
+    option_parser.parse!(args)
   end 
 
-  def self.check_for_number(number)
-    return true if number.to_i.to_s == number
-    false
+  def self.option_parser 
+    OptionParser.new do |opts| 
+      opts.banner = "Usage: diceware [options...] <file name>"
+      opts.separator ""
+      opts.separator "Options"
+      opts.on('-w', '--words NUM', 
+              'Specify number of words password should contain') do |words|
+        @options[:words] = words.to_i
+      end
+      opts.on('-a', '--average NUM', 
+              'Specify how random the password should be') do |average|
+        @options[:average] = average.to_i
+      end
+      opts.on('--[no-]copy', 'Copies result to clipboard') do |copy|
+        @options[:copy] = copy
+      end 
+      opts.separator ""
+      opts.on_tail('--version', 'Show version number') do
+        puts "Diceware.rb version #{VERSION}"
+        exit
+      end
+      opts.on_tail('-h', "--help", "Show this help") do 
+        puts opts 
+        exit
+      end 
+    end 
   end
 
   def self.generate
     begin 
-      password = Generator.new(@file, @number.to_i)
+      password = Generator.new(ARGV[0], @options[:words], @options[:average])
       puts "Your password will be generated from a list of #{password.array.count} unique words."
     rescue Errno::ENOENT
       puts "That file doesn't exist. Try again."
       file_name
     else
+      gets
       password = password.generate!
       puts "Your password is: #{password}"
-      print "Do you want to copy your password to the clipboard? (Y|n) "
-      input = gets.chomp.strip
-      if input == "Y" || input == "y"
+      if @options[:copy]
         pbcopy(password)
       end
-      print "Thanks for using the Custom Diceware Password Generator"
     end    
   end
 
@@ -81,12 +62,12 @@ module Diceware
     IO.popen('pbcopy', 'w') { |f| f << str }
     puts 'Copied to clipboard!'
   end
+end
 
-  begin 
-    puts "Welcome to the Custom Diceware Password Generator"
-    file_name
-  rescue Interrupt
-    puts 
-    print "Thanks for using the Custom Diceware Password Generator"
-  end 
+begin
+  ARGV << "--help" if ARGV.empty?
+  Diceware.parse(ARGV)
+  Diceware.generate
+rescue Interrupt
+  puts
 end 
