@@ -6,7 +6,6 @@ require_relative 'diceware/parser'
 begin
   ARGV << "--help" if ARGV.empty?
   Parser.parse(ARGV)
-  Parser.generate
 rescue Interrupt
   puts
 end 

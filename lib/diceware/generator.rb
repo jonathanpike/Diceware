@@ -1,8 +1,8 @@
 class Generator
-  def initialize(file, number, average=6)
+  def initialize(file, word_count, average)
     @file = file
-    @number = number
-    @average = average
+    @word_count = word_count || 6
+    @average = average || 6
     @words = IO.read(@file)
     @array = @words.downcase!.gsub!(/\n/," ").gsub!(/[^a-z]/, ' ')
              .split(' ').reject! { |w| w.length < 4 }.uniq!
@@ -14,7 +14,7 @@ class Generator
 
   def generate!
     password = []
-    @number.times do |num| 
+    @word_count.times do |num| 
       index = random_index_average
       password << @array[index]
     end 
