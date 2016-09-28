@@ -19,7 +19,7 @@ class Parser
       opts.separator "Options"
       opts.on('-w', '--words [NUM]', 
               'number of words the password will contain (default 6)') do |words|
-        @options[:words] = words.to_i
+        @options[:word_count] = words.to_i
       end
       opts.on('-a', '--average [NUM]', 
               'randomize password generation further (default 6)') do |average|
@@ -44,7 +44,7 @@ class Parser
   end
 
   def self.generate
-    password = setup_generator
+    password = normalize_and_generate
     verbose(password)
     password = password.generate!
     puts "Your password is: #{password}"
@@ -63,9 +63,10 @@ class Parser
     puts "Your password will be generated from a list of #{password.count} unique words."
   end 
 
-  def self.setup_generator
+  def self.normalize_and_generate
     begin
-      Generator.new(ARGV[0], @options[:words], @options[:average])
+      file = Normalizer.new(ARGV[0])
+      Generator.new(file.normalize!, @options)
     rescue Errno::ENOENT
       puts "That file doesn't exist. Try again."
     end 
