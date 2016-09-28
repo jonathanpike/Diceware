@@ -4,8 +4,6 @@ class Parser
 
   VERSION = '0.2.0'
 
-  attr_reader :options
-
   def self.parse(args)
     @options = {}
     option_parser.parse!(args)
@@ -47,6 +45,7 @@ class Parser
 
   def self.generate
     password = setup_generator
+    verbose(password)
     password = password.generate!
     puts "Your password is: #{password}"
     pbcopy(password)
@@ -59,7 +58,7 @@ class Parser
     puts 'Copied to clipboard!'
   end
 
-  def self.verbose
+  def self.verbose(password)
     return unless @options[:verbose]
     puts "Your password will be generated from a list of #{password.count} unique words."
   end 

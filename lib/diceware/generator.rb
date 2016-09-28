@@ -1,4 +1,5 @@
 class Generator
+  attr_reader :word_count, :average, :array
   def initialize(file, word_count, average)
     @file = file
     @word_count = word_count || 6
@@ -9,14 +10,14 @@ class Generator
   end
 
   def count 
-    @array.count
+    array.count
   end
 
   def generate!
     password = []
-    @word_count.times do |num| 
+    word_count.times do |num| 
       index = random_index_average
-      password << @array[index]
+      password << array[index]
     end 
     password.join(" ")
   end
@@ -25,12 +26,12 @@ class Generator
 
   def generate_random_index
     prng = Random.new
-    prng.rand(@array.count)  
+    prng.rand(array.count)  
   end
 
   def random_index_average
     indices = []
-    @average.times { indices << generate_random_index }
-    indices.inject(&:+) / @average
+    average.times { indices << generate_random_index }
+    indices.inject(&:+) / average
   end
 end
