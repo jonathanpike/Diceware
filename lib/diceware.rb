@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require_relative 'diceware/normalizer'
 require_relative 'diceware/generator'
 require_relative 'diceware/parser'
 
