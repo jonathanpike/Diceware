@@ -1,8 +1,9 @@
 require 'spec_helper'
 
 RSpec.describe Generator do
-  before(:context) do 
-    @generator = Generator.new(File.expand_path('../../pride_and_prejudice.txt', __FILE__), 6, nil)
+  before(:context) do
+    file = Normalizer.new(File.expand_path('../../pride_and_prejudice.txt', __FILE__))
+    @generator = Generator.new(file.normalize!, {word_count: 6})
   end
 
   describe "#generate!" do

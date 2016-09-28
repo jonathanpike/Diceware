@@ -1,23 +1,21 @@
 class Generator
-  attr_reader :word_count, :average, :array
-  def initialize(file, word_count, average)
-    @file = file
-    @word_count = word_count || 6
-    @average = average || 6
-    @words = IO.read(@file)
-    @array = @words.downcase!.gsub!(/\n/," ").gsub!(/[^a-z]/, ' ')
-             .split(' ').reject! { |w| w.length < 4 }.uniq!
+  attr_reader :words, :word_count, :average
+  
+  def initialize(words, options)
+    @words = words
+    @word_count = options.fetch(:word_count, 6)
+    @average = options.fetch(:average, 6)
   end
 
   def count 
-    array.count
+    words.count
   end
 
   def generate!
     password = []
     word_count.times do |num| 
       index = random_index_average
-      password << array[index]
+      password << words[index]
     end 
     password.join(" ")
   end
@@ -26,7 +24,7 @@ class Generator
 
   def generate_random_index
     prng = Random.new
-    prng.rand(array.count)  
+    prng.rand(words.count)  
   end
 
   def random_index_average
