@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-RSpec.describe Normalizer do
+RSpec.describe Diceware::Normalizer do
   describe "#normalize!" do
     before(:example) do
-      @normalizer = Normalizer.new(File.expand_path('../../pride_and_prejudice.txt', __FILE__))
+      @normalizer = Diceware::Normalizer.new(File.expand_path('../../pride_and_prejudice.txt', __FILE__))
       @actual = @normalizer.normalize!
     end 
 

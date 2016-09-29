@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-RSpec.describe Generator do
+RSpec.describe Diceware::Generator do
   before(:context) do
-    file = Normalizer.new(File.expand_path('../../pride_and_prejudice.txt', __FILE__))
-    @generator = Generator.new(file.normalize!, {word_count: 6})
+    file = Diceware::Normalizer.new(File.expand_path('../../pride_and_prejudice.txt', __FILE__))
+    @generator = Diceware::Generator.new(file.normalize!, {word_count: 6})
   end
 
   describe "#generate!" do
