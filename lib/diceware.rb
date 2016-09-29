@@ -1,12 +1,7 @@
-#!/usr/bin/env ruby
+require 'optparse'
 
-require_relative 'diceware/normalizer'
-require_relative 'diceware/generator'
-require_relative 'diceware/parser'
+require 'diceware/version'
 
-begin
-  ARGV << "--help" if ARGV.empty?
-  Parser.parse(ARGV)
-rescue Interrupt
-  puts
-end 
+require 'diceware/normalizer'
+require 'diceware/generator'
+require 'diceware/parser'
