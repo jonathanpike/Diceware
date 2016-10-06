@@ -28,6 +28,9 @@ module Diceware
         end 
         opts.on('--copy', 'copies result to clipboard') do |copy|
           options[:copy] = true
+        end
+        opts.on('-l', '--log', 'logs word list') do |log|
+          options[:log] = true
         end 
         opts.separator ""
         opts.on_tail('--version', 'show version number') do
@@ -42,24 +45,13 @@ module Diceware
     end
 
     def generate
-      password = normalize_and_generate
-      verbose(password)
-      password = password.generate!
+      generator = normalize_and_generate
+      verbose(generator)
+      log(generator)
+      password = generator.generate!
       puts "Your password is: #{password}"
       pbcopy(password)
-    end  
-
-    def pbcopy(input)
-      return unless options[:copy]
-      str = input.to_s
-      IO.popen('pbcopy', 'w') { |f| f << str }
-      puts 'Copied to clipboard!'
     end
-
-    def verbose(password)
-      return unless options[:verbose]
-      puts "Your password will be generated from a list of #{password.count} unique words."
-    end 
 
     def normalize_and_generate
       begin
@@ -68,6 +60,23 @@ module Diceware
       rescue Errno::ENOENT
         puts "That file doesn't exist. Try again."
       end 
-    end  
+    end 
+
+    def pbcopy(input)
+      return unless options[:copy]
+      str = input.to_s
+      IO.popen('pbcopy', 'w') { |f| f << str }
+      puts 'Copied to clipboard!'
+    end
+
+    def verbose(list)
+      return unless options[:verbose]
+      puts "Your password will be generated from a list of #{list.count} unique words."
+    end
+
+    def log(list)
+      return unless options[:log]
+      Logger.new(list.words).log_list
+    end     
   end
 end 
